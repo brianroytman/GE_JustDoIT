@@ -1,0 +1,19 @@
+{
+  "name": "node-timeseries-ingestion",
+  "version": "1.0.0",
+  "description": "Ingest data into Predix Timeseries using the websockets library.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexander Wong",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.build.ge.com/212464738/node-timeseries-ingestion.git"
+  },
+  "dependencies": {
+    "https-proxy-agent": "^1.0.0",
+    "ws": "^1.0.1"
+  }
+}
