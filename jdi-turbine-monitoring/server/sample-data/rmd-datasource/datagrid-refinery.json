@@ -1,6 +1,6 @@
 {
 	"tableData": [{
-		"tag": "crank-frame-compressionratio",
+		"tag": "Turbine 1",
 		"tagUri": "/tag/crank-frame-compressionratio",
 		"tag_isKpi": true,
 		"tag_isPM": true,
@@ -12,7 +12,7 @@
 		"asset": "Bently Compressor",
 		"assetUri": "/asset/compressor-2015"
 	}, {
-		"tag": "crank-frame-dischargepressure",
+		"tag": "Turbine 2",
 		"tagUri": "/tag/crank-frame-dischargepressure",
 		"tag_isKpi": true,
 		"tag_isPM": true,
@@ -24,7 +24,7 @@
 		"asset": "Bently Compressor",
 		"assetUri": "/asset/compressor-2015"
 	}, {
-		"tag": "crank-frame-velocity",
+		"tag": "Turbine 3",
 		"tagUri": "/tag/crank-frame-velocity",
 		"tag_isKpi": true,
 		"tag_isPM": true,
