@@ -14,11 +14,13 @@
       <px-card id="tableCard" style="padding-top: 15px">
         <px-data-table table-data="{{seedTableData}}" hide-pagination-control="[[!showPagination]]">
           <px-data-table-column name="tag" type="html"></px-data-table-column>
-          <px-data-table-column name="alertStatus" label="Health" type="html" hide="[[showAssetOnly]]"></px-data-table-column>
+          <px-data-table-column name="alertStatus" label="Alert Status" type="html" hide="[[showAssetOnly]]"></px-data-table-column>
           <px-data-table-column name="deltaThreshold" label="Delta to Threshold" type="html" hide="[[showAssetOnly]]"></px-data-table-column>
-          <px-data-table-column name="lastTagReading" label="Last Reading" hide="[[showAssetOnly]]"></px-data-table-column>
-          <px-data-table-column name="currentValue" label="Temperature" hide="[[showAssetOnly]]"></px-data-table-column>
-          <px-data-table-column name="thresholdMin" label="Voltage">
+          <px-data-table-column name="lastTagReading" label="Last Meter Reading" hide="[[showAssetOnly]]"></px-data-table-column>
+          <px-data-table-column name="currentValue" label="Current Value" hide="[[showAssetOnly]]"></px-data-table-column>
+          <px-data-table-column name="unit" label="Units" hide="[[showAssetOnly]]"></px-data-table-column>
+          <px-data-table-column name="thresholdMin" label="Threshold Min"></px-data-table-column>
+          <px-data-table-column name="thresholdMax" label="Threshold Max"></px-data-table-column>
         </px-data-table>
       </px-card>
     </template>
@@ -72,7 +74,7 @@
 
       _getAlertHtml: function(row) {
         var color = row.alertStatus ? 'red' : 'green';
-        var iconClass = row.alertStatus ? 'fa-square' : 'fa-circle';
+        var iconClass = row.alertStatus ? 'fa-exclamation-triangle' : 'fa-circle';
         return '<div style="color:' + color + ';"><iron-icon icon="fa:' + iconClass + '"></iron-icon></div>';
       },
 

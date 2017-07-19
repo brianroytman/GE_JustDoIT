@@ -1,0 +1,239 @@
+<html><head></head><body><div hidden="" by-polymer-bundler=""><link rel="import" href="../seed-app/seed-app.html"></div><dom-module id="jdi-view"> <template> <px-card header-text="Turbine Details" icon="fa-sitemap"> <h3>Turbine Listing</h3> <px-data-table table-data="{{formattedTurbineDatapoints}}" striped="true" show-column-chooser="true"> <px-data-table-column name="Turbine"></px-data-table-column> <px-data-table-column name="Temperature"></px-data-table-column> <px-data-table-column name="Voltage"></px-data-table-column> <px-data-table-column name="Status"></px-data-table-column> </px-data-table> <iron-ajax id="requestTurbine" url="/api/predix-timeseries/v1/tags" method="GET" handle-as="json" last-response="{{rawTurbineTags}}" auto=""></iron-ajax> <iron-ajax id="requestTurbineDatapoints" content-type="application/json" last-response="{{rawTurbineDatapoints}}" on-response="_updateData"></iron-ajax> <iron-ajax url="/mock-api/predix-asset/asset?filter=group=/group/plant-richmond-refinery" id="assetQueryElement" last-response="{{rawAssetData}}" auto=""></iron-ajax> </px-card> </template> <script> Polymer({
+      is: 'jdi-view',
+      ready: function () {
+        this._createTurbineDatapointsQuery()
+      },
+      _updateData: function() {
+        this.async(function() {
+          this.$.requestTurbineDatapoints.generateRequest();
+        }, 2000);
+      },
+      properties: {
+        tsChartData: {
+          type: Array
+        },
+        rawAssetData: {
+          type: Object,
+          observer: '_formatDataForTable'
+        },
+        assetTableData: {
+          type: Object
+        },
+        assetDescription: {
+          type: String
+        },
+        rawTurbineTags: {
+          type: Object,
+          observer: '_turbineTags'
+        },
+        rawTurbineDatapoints: {
+          type: Object,
+          observer: '_turbineDatapoints'
+        },
+        dataString: {
+          type: String
+        },
+        formattedTurbineTags: {
+          type: Array
+        },
+        formattedTurbineDatapoints: {
+          type: Array
+        },
+        turbineQuery: {
+          type: Object
+        }
+      },
+
+      _turbineTags: function(raw) {
+        //console.log(raw.results)
+        this.formattedTurbineTags = raw.results
+       
+        //this.dataString = JSON.stringify(this.rawTurbineData)
+        //console.log(this.dataString)
+      },
+
+      _turbineDatapoints: function(raw) {
+        turbine1Temp = 0
+        turbine1Voltage = 0
+        turbine1Heartbeat = 0
+        turbine2Temp = 0
+        turbine2Voltage = 0
+        turbine2Heartbeat = 0
+        turbine3Temp = 0
+        turbine3Voltage = 0
+        turbine3Heartbeat = 0
+        turbine1Temp = raw.tags[0].results[0].values[0][1]
+        turbine1Voltage = raw.tags[1].results[0].values[0][1]
+        //turbine1Heartbeat = raw.tags[2].results[0].values[0][1]
+        turbine2Temp = raw.tags[3].results[0].values[0][1]
+        turbine2Voltage = raw.tags[4].results[0].values[0][1]
+        //turbine2Heartbeat = raw.tags[5].results[0].values[0][1]
+        turbine3Temp = raw.tags[6].results[0].values[0][1]
+        turbine3Voltage = raw.tags[7].results[0].values[0][1]
+        //turbine3Heartbeat = raw.tags[8].results[0].values[0][1]
+        
+        //console.log(turbine1)
+        //turbine1LatestValues = turbine1.results[0].values[0]
+        console.log(turbine1Temp)
+        //turbine1Temp = turbine1LatestValues[1]
+
+
+        this.formattedTurbineDatapoints = [{
+            "Turbine": "Turbine 1",
+            "Temperature": turbine1Temp,
+            "Voltage": turbine1Voltage,
+            "Status": turbine1Heartbeat
+          },
+          {
+            "Turbine": "Turbine 2",
+            "Temperature": turbine2Temp,
+            "Voltage": turbine2Voltage,
+            "Status": turbine2Heartbeat
+          },
+          {
+            "Turbine": "Turbine 3",
+            "Temperature": turbine3Temp,
+            "Voltage": turbine3Voltage,
+            "Status": turbine3Heartbeat
+          }
+        ]
+
+        
+
+      },
+
+
+      _formatDataForTable: function(raw) {
+        console.log(raw)
+        if (raw[0].assetTag) {
+          this._formatAssetTagsForTable(raw);
+        } else {
+          this._formatEngineDataForTable(raw);
+        }
+
+      },
+
+      _formatAssetTagsForTable: function(raw) {
+        var sensor, sensors = [];
+        var assetTags = raw[0].assetTag;
+        for (var property in assetTags) {
+          if (assetTags.hasOwnProperty(property)) {
+            sensor = assetTags[property];
+            delete sensor.complexType;
+            delete sensor.tagDatasource;
+            sensors.push(sensor);
+          }
+        }
+        this.assetTableData = sensors;
+        this.assetDescription = raw[0].description + ": " + raw[0].assetId;
+      },
+
+      _formatEngineDataForTable: function(raw) {
+        raw.forEach(function(engine) {
+          engine.partUri = engine.jetEnginePart.uri;
+          engine.partSerialNo = engine.jetEnginePart.sNo;
+          delete engine.jetEnginePart;
+        })
+        this.assetTableData = raw;
+        //console.log(raw);
+        this.assetDescription = "Jet Engines";
+      },
+
+      _createTurbineDatapointsQuery: function() {
+      //console.log('watered');
+       //turbineQuery = {}
+       //turbineQu
+       //turbineQuery.tags = []
+       //turbineQuery.tags.push({"name": "jdi-turbine1"})
+      
+
+       turbineQuery = {
+  "start": "100y-ago",
+  "tags": [
+    {
+      "name": "JustDoIt-1-temperature",
+      "order": "desc"
+    },
+    {
+      "name": "JustDoIt-1-voltage",
+      "order": "desc"
+    },
+    {
+      "name": "JustDoIt-1-heartbeat",
+      "order": "desc"
+    },
+        {
+      "name": "JustDoIt-2-temperature",
+      "order": "desc"
+    },
+    {
+      "name": "JustDoIt-2-voltage",
+      "order": "desc"
+    },
+    {
+      "name": "JustDoIt-2-heartbeat",
+      "order": "desc"
+    },
+        {
+      "name": "JustDoIt-3-temperature",
+      "order": "desc"
+    },
+    {
+      "name": "JustDoIt-3-voltage",
+      "order": "desc"
+    },
+    {
+      "name": "JustDoIt-3-heartbeat",
+      "order": "desc"
+    }
+  ]
+}
+          
+        
+        //console.log('turbine query: ')
+        //console.log(turbineQuery)
+        this.$.requestTurbineDatapoints.url = "/api/predix-timeseries/v1/datapoints/";
+        this.$.requestTurbineDatapoints.method = 'POST';
+        this.$.requestTurbineDatapoints.body = turbineQuery
+        this.$.requestTurbineDatapoints.generateRequest();
+      },
+
+      //from timeseries-chart.html
+      _fetchTimeseriesData: function(tags, range) {
+        var agg = [{
+          "type": "avg",
+          "sampling": {
+            "unit": "s",
+            "value": "30"
+          }
+        }];
+        var query = {
+          "cache_time": 0,
+          start: moment(range.from).valueOf(),
+          end: moment(range.to).valueOf(),
+          tags: []
+        };
+        tags.forEach(function(t) {
+          if (t.checked) {
+            query.tags.push({
+              name: t.key,
+              aggregations: agg
+            });
+          }
+        });
+        if (query.tags.length === 0) {  // default, if none were selected yet
+          query.tags.push({
+            name: this._getFirstSelectedTag(tags),
+            aggregations: agg
+          });
+        }
+        // {cache_time: 0, tags: [{name: "Compressor-2015:DischargePressure","aggregations":[{"type":"avg","sampling":{"unit":"s","value":"30"}}]}], start: 1489001400000, end:1489603772723}
+        console.log('fetching timeseries data', tags, range);
+        this.set('tsChartData', []);
+        this.set('tsSeriesConfig', {});
+        this.$.tsAjaxEl.url = '/api/predix-timeseries/v1/datapoints';
+        this.$.tsAjaxEl.method = 'POST';
+        this.$.tsAjaxEl.body = query;
+        this.$.tsAjaxEl.generateRequest();
+      }
+    }); </script> </dom-module> </body></html>
