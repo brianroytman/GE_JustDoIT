@@ -72,7 +72,7 @@
 
       _getAlertHtml: function(row) {
         var color = row.alertStatus ? 'red' : 'green';
-        var iconClass = row.alertStatus ? 'fa-exclamation-triangle' : 'fa-circle';
+        var iconClass = row.alertStatus ? 'fa-square' : 'fa-circle';
         return '<div style="color:' + color + ';"><iron-icon icon="fa:' + iconClass + '"></iron-icon></div>';
       },
 
